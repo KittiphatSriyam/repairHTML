@@ -1,31 +1,16 @@
-const fs = require("fs");
 const sanitizeHtml = require("sanitize-html");
-function correctHtml (element) {
-  return element;
-}
-function correctHtmlFromFile (filename) {
-  var content = fs
-    .readFileSync(filename)
-    .toString()
+
+export const repairHTML = element => {
+  element = element
     .replace(/\t/g, "")
     .replace(/\r/g, "")
     .replace(/\n/g, "");
-  var contentSantize = sanitizeHtml(content, {
-    allowedTags: ["p", "br", "div", "h1", "h2", "h3", "h4"],
+
+  var contentSantize = sanitizeHtml(element, {
+    allowedTags: ["p", "br", "div", "h1", "h2", "h3", "h4", "span"],
     allowedAttributes: {
-      div: ["style"],
-      p: ["style"],
-      h1: ["style"],
-      h2: ["style"],
-      h3: ["style"],
-      h4: ["style"]
+      "*": ["style"]
     }
   });
-  console.log("contentSantize: ", contentSantize);
-  fs.writeFileSync("./test2.html", contentSantize);
-}
-correctHtmlFromFile("./test.html");
-module.exports = {
-  correctHtml: correctHtml,
-  correctHtmlFromFile: correctHtmlFromFile
+  return contentSantize;
 };
